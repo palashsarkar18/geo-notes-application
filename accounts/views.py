@@ -1,4 +1,7 @@
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.views import View
 from django.http import HttpResponseRedirect
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
@@ -30,3 +33,36 @@ class CreateUserView(generics.CreateAPIView):
             return HttpResponseRedirect(redirect_to='/api/pois/')
 
         return response
+
+
+class LoginView(View):
+    """
+    View to handle user login via a form.
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        return render(request, 'accounts/login.html')
+
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'Login successful!')
+            return redirect('/api/pois/')
+        else:
+            messages.error(request, 'Invalid username or password')
+            return render(request, 'accounts/login.html')
+
+
+class LogoutView(View):
+    """
+    View to handle user logout.
+    """
+    def post(self, request):
+        logout(request)
+        messages.success(request, 'Logout successful!')
+        return redirect('user-login')
