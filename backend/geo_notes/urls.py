@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.authtoken import views
 from accounts.views import GetCSRFToken, LoginView, LogoutView, CreateUserView
 
 urlpatterns = [
@@ -25,4 +26,5 @@ urlpatterns = [
     path('api/accounts/logout/', LogoutView.as_view(), name='user-logout'),
     path('api/csrf-token/', GetCSRFToken.as_view(), name='csrf-token'),
     path('api/pois/', include('pois.urls')),
+    path('api-token-auth/', views.obtain_auth_token),
 ]

@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import generics, status
+from rest_framework.authtoken.models import Token
 from .serializers import UserSerializer
 from .models import User
 from django.middleware.csrf import get_token
@@ -36,7 +37,8 @@ class CreateUserView(generics.CreateAPIView):
         # Log in the newly created user if creation was successful
         if response.status_code == status.HTTP_201_CREATED:
             login(request, user)
-            return JsonResponse({'message': 'User created and logged in successfully', 'token': 'dummy-token'}, status=201)
+            token, created = Token.objects.get_or_create(user=user)
+            return JsonResponse({'message': 'User created and logged in successfully', 'token': token.key}, status=201)
 
         return response
 
@@ -54,7 +56,8 @@ class LoginView(APIView):
 
         if user is not None:
             login(request, user)
-            return JsonResponse({'message': 'Login successful', 'token': 'dummy-token'}, status=200)
+            token, created = Token.objects.get_or_create(user=user)
+            return JsonResponse({'message': 'Login successful', 'token': token.key}, status=200)
         else:
             return JsonResponse({'error': 'Invalid username or password'}, status=400)
 

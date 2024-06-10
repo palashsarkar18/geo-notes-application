@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   db:
-    image: postgres:16
+    image: postgres:13
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USER}
@@ -15,24 +15,15 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: .devcontainer/Dockerfile
     volumes:
-      - ./backend:/backend
+      - ./backend:/workspace/backend
+      - ./frontend:/workspace/frontend
     ports:
       - "8000:8000"
+      - "3000:3000"
     depends_on:
       - db
-    env_file:
-      - .env
-
-  frontend:
-    build:
-      context: ./frontend
-    volumes:
-      - ./frontend:/frontend
-    ports:
-      - "3000:3000"
-    command: ["npm", "start"]
     env_file:
       - .env
 

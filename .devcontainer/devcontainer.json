@@ -1,0 +1,14 @@
+{
+    "name": "Geo Notes Dev Container",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "web",
+    "workspaceFolder": "/workspace",
+    "customizations/vscode/extensions": [
+        "ms-python.python",
+        "ms-azuretools.vscode-docker"
+    ],
+    "customizations/vscode/settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    }
+}
+  
