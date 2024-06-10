@@ -16,11 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import index
+from accounts.views import GetCSRFToken, LoginView, LogoutView, CreateUserView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/accounts/', include('accounts.urls')),
-    path('api/', include('pois.urls')),
-    path('', index, name='index'),
+    path('api/accounts/register/', CreateUserView.as_view(), name='user-register'),
+    path('api/accounts/login/', LoginView.as_view(), name='user-login'),
+    path('api/accounts/logout/', LogoutView.as_view(), name='user-logout'),
+    path('api/csrf-token/', GetCSRFToken.as_view(), name='csrf-token'),
+    path('api/pois/', include('pois.urls')),
 ]

@@ -49,9 +49,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'accounts',
     'pois',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -160,7 +160,13 @@ REST_FRAMEWORK = {
     ),
 }
 
-# Configure CORS
+# Configure CORS+
+CORS_ALLOW_CREDENTIALS = True  # Allow credentials
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React app URL
+]
+
+# Configure CSRF trusted origins
+CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",  # React app URL
 ]

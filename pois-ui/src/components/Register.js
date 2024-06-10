@@ -1,26 +1,47 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getCsrfToken } from '../utils/csrf';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const history = useHistory();
+  const [csrfToken, setCsrfToken] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      const token = await getCsrfToken();
+      setCsrfToken(token);
+    };
+
+    fetchCsrfToken();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://localhost:8000/api/accounts/register/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password, email }),
-    });
+    try {
+      const response = await fetch('http://localhost:8000/api/accounts/register/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ username, password, email }),
+        credentials: 'include',  // Include credentials
+      });
 
-    if (response.ok) {
-      history.push('/login');
-    } else {
-      console.error('Registration failed');
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('Response not OK:', text);
+        throw new Error('Registration failed');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);  // Store token
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during registration:', error);
     }
   };
 

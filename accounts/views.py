@@ -1,13 +1,19 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.views import View
-from django.http import HttpResponseRedirect
-from rest_framework import generics, status
+from django.http import JsonResponse
+from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework import generics, status
 from .serializers import UserSerializer
 from .models import User
+from django.middleware.csrf import get_token
+
+
+class GetCSRFToken(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        return JsonResponse({'csrfToken': get_token(request)})
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -30,39 +36,33 @@ class CreateUserView(generics.CreateAPIView):
         # Log in the newly created user if creation was successful
         if response.status_code == status.HTTP_201_CREATED:
             login(request, user)
-            return HttpResponseRedirect(redirect_to='/api/pois/')
+            return JsonResponse({'message': 'User created and logged in successfully', 'token': 'dummy-token'}, status=201)
 
         return response
 
 
-class LoginView(View):
+class LoginView(APIView):
     """
-    View to handle user login via a form.
+    View to handle user login via API.
     """
     permission_classes = [AllowAny]
 
-    def get(self, request):
-        return render(request, 'accounts/login.html')
-
     def post(self, request):
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.data.get('username')
+        password = request.data.get('password')
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
-            messages.success(request, 'Login successful!')
-            return redirect('/api/pois/')
+            return JsonResponse({'message': 'Login successful', 'token': 'dummy-token'}, status=200)
         else:
-            messages.error(request, 'Invalid username or password')
-            return render(request, 'accounts/login.html')
+            return JsonResponse({'error': 'Invalid username or password'}, status=400)
 
 
-class LogoutView(View):
+class LogoutView(APIView):
     """
-    View to handle user logout.
+    View to handle user logout via API.
     """
     def post(self, request):
         logout(request)
-        messages.success(request, 'Logout successful!')
-        return redirect('user-login')
+        return JsonResponse({'message': 'Logout successful'}, status=200)
