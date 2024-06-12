@@ -19,7 +19,7 @@ Geo Notes is a full-stack web application that allows users to register, log in,
 ## Project Structure
 
 ```
-geo_notes/
+root/
 ├── backend/
 │ ├── geo_notes/ # Django project root
 │ │ ├── init.py
@@ -47,6 +47,7 @@ geo_notes/
 │ │ └── ...
 │ ├── manage.py
 │ ├── requirements.txt
+└─├── .env
 │ └── ...
 ├── frontend/
 │ ├── public/
@@ -67,7 +68,6 @@ geo_notes/
 ├── Dockerfile
 ├── docker-compose.yml
 ├── README.md
-└── .env
 ```
 
 
