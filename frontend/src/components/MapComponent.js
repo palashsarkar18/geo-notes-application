@@ -22,7 +22,7 @@ const MapComponent = () => {
   const contentRef = useRef(null);
   
   const handleMapClick = async (event) => {
-    console.log("I AM HERE 1 - handleMapClick");
+    console.log("handleMapClick");
     const coordinate = toLonLat(event.coordinate);
     const description = prompt('Enter description for the POI:');
 
@@ -60,7 +60,7 @@ const MapComponent = () => {
   };
 
   const handlePointerMove = (event) => {
-    console.log("I AM HERE 2 - handlePointerMove");
+    console.log("handlePointerMove");
     const map = mapRef.current;
     const selected = map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
 
@@ -148,7 +148,7 @@ const MapComponent = () => {
       console.log("Adding event listeners - singleclick and pointermove");
       mapRef.current.on('singleclick', handleMapClick);
       mapRef.current.on('pointermove', handlePointerMove);
-      console.log("I AM HERE 3 - map initialized and event listeners added");
+      console.log("map initialized and event listeners added");
     }
 
     // Cleanup function to remove event listeners only when component unmounts
@@ -157,7 +157,7 @@ const MapComponent = () => {
         // console.log("Removing event listeners - singleclick and pointermove");
         // mapRef.current.un('singleclick', handleMapClick);
         // mapRef.current.un('pointermove', handlePointerMove);
-        // console.log("I AM HERE 4 - event listeners removed");
+        // console.log("event listeners removed");
       }
     };
   }, [token]);

@@ -13,6 +13,7 @@ Geo Notes is a full-stack web application that allows users to register, log in,
   - [Environment Variables](#environment-variables)
   - [Usage](#usage)
   - [API Endpoints](#api-endpoints)
+    - [Test](#test)
   - [Contributing](#contributing)
   - [License](#license)
 
@@ -146,6 +147,11 @@ Ensure you have the following installed on your system:
 - **Login**: `POST /api/accounts/login/`
 - **Logout**: `POST /api/accounts/logout/`
 - **POIs**: `GET /api/pois/`
+
+### Test
+```
+pytest --cov=accounts --cov=geo_notes --cov=pois --cov-report=term-missing
+```
 
 ## Contributing
 

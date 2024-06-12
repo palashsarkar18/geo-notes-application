@@ -32,8 +32,6 @@ def test_login_view(api_client):
         'password': 'testpassword'
     }
     response = api_client.post(url, data, format='json')
-    print("I AM HERE")
-    print(response)
     assert response.status_code == status.HTTP_200_OK
     assert 'token' in response.json()
 
