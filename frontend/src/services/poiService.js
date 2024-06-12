@@ -1,7 +1,6 @@
 const API_URL = 'http://localhost:8000/api/pois';
 
-export const getPOIs = async (tokenX, poi, csrfToken) => {
-  const token = localStorage.getItem('token');
+export const getPOIs = async (token, poi, csrfToken) => {
   const response = await fetch(`${API_URL}/pois/`, {
     headers: {
       'Content-Type': 'application/json',
@@ -15,8 +14,7 @@ export const getPOIs = async (tokenX, poi, csrfToken) => {
   return response.json();
 };
 
-export const createPOI = async (tokenX, poi, csrfToken) => {
-  const token = localStorage.getItem('token');
+export const createPOI = async (token, poi, csrfToken) => {
   console.log("Sending POI data:", poi);  // Log the payload before sending it
   const response = await fetch(`${API_URL}/pois/`, {
     method: 'POST',
@@ -43,10 +41,9 @@ export const createPOI = async (tokenX, poi, csrfToken) => {
   return response.json();
 };
 
-export const updatePOI = async (id, poi) => {
-  const token = localStorage.getItem('token');
+export const updatePOI = async (token, id, poi) => {
   const response = await fetch(`${API_URL}/pois/${id}/`, {
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Token ${token}`
@@ -59,8 +56,7 @@ export const updatePOI = async (id, poi) => {
   return response.json();
 };
 
-export const deletePOI = async (id) => {
-  const token = localStorage.getItem('token');
+export const deletePOI = async (token, id) => {
   const response = await fetch(`${API_URL}/pois/${id}/`, {
     method: 'DELETE',
     headers: {

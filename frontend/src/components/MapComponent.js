@@ -9,6 +9,7 @@ import { Point } from 'ol/geom';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Style, Icon } from 'ol/style';
+import Overlay from 'ol/Overlay';
 import { getPOIs, createPOI, updatePOI, deletePOI } from '../services/poiService';
 import { getCsrfToken } from '../utils/csrf';
 
@@ -17,24 +18,25 @@ const MapComponent = () => {
   const [vectorSource] = useState(new VectorSource());
   const [selectedFeature, setSelectedFeature] = useState(null);
   const token = localStorage.getItem('token');
-
+  const popupRef = useRef(null);
+  const contentRef = useRef(null);
+  
   const handleMapClick = async (event) => {
     console.log("I AM HERE 1 - handleMapClick");
     const coordinate = toLonLat(event.coordinate);
     const description = prompt('Enter description for the POI:');
 
     if (description) {
-      const poi = { 
-        latitude: parseFloat(coordinate[1].toFixed(6)), 
+      const poi = {
+        latitude: parseFloat(coordinate[1].toFixed(6)),
         longitude: parseFloat(coordinate[0].toFixed(6)),
-        description 
+        description
       };
       console.log("Payload to be sent to the server:", poi);  // Log the payload
 
       // Fetch CSRF token
       const csrfToken = await getCsrfToken();
       console.log("CSRF Token:", csrfToken);
-
 
       createPOI(token, poi).then(newPOI => {
         const feature = new Feature({
@@ -45,8 +47,8 @@ const MapComponent = () => {
         feature.setStyle(
           new Style({
             image: new Icon({
-              src: 'path_to_icon.png',
-              scale: 0.05
+              src: '/geolocation_marker.png',
+              scale: 1
             })
           })
         );
@@ -59,25 +61,45 @@ const MapComponent = () => {
 
   const handlePointerMove = (event) => {
     console.log("I AM HERE 2 - handlePointerMove");
-
-    const selected = mapRef.current.forEachFeatureAtPixel(event.pixel, (feature) => {
-      return feature;
-    });
+    const map = mapRef.current;
+    const selected = map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
 
     if (selected) {
       if (selectedFeature !== selected) {
         setSelectedFeature(selected);
-        mapRef.current.getTargetElement().style.cursor = 'pointer';
+        map.getTargetElement().style.cursor = 'pointer';
+
+        const coordinates = selected.getGeometry().getCoordinates();
+        const description = selected.get('name');
+        if (contentRef.current) {
+          contentRef.current.innerHTML = description;
+        }
+        if (popupRef.current) {
+          popupRef.current.setPosition(coordinates);
+        }
       }
     } else {
       if (selectedFeature) {
         setSelectedFeature(null);
-        mapRef.current.getTargetElement().style.cursor = '';
+        map.getTargetElement().style.cursor = '';
+        if (popupRef.current) {
+          popupRef.current.setPosition(undefined); // Hide the popup
+        }
       }
     }
   };
 
   useEffect(() => {
+    const popupElement = document.getElementById('popup');
+    const contentElement = document.getElementById('popup-content');
+    contentRef.current = contentElement;  // Set the contentRef to the actual DOM element
+    popupRef.current = new Overlay({
+      element: popupElement,
+      positioning: 'bottom-center',
+      stopEvent: false,
+      offset: [0, -10]
+    });
+
     if (!mapRef.current) {
       mapRef.current = new Map({
         target: 'map',
@@ -92,7 +114,8 @@ const MapComponent = () => {
         view: new View({
           center: fromLonLat([24.9384, 60.1699]),
           zoom: 12
-        })
+        }),
+        overlays: [popupRef.current]
       });
 
       // Fetch POIs from the backend
@@ -107,8 +130,8 @@ const MapComponent = () => {
             feature.setStyle(
               new Style({
                 image: new Icon({
-                  src: 'path_to_icon.png',
-                  scale: 0.05
+                  src: '/geolocation_marker.png',
+                  scale: 1
                 })
               })
             );
@@ -177,6 +200,9 @@ const MapComponent = () => {
       <button onClick={handleEditPOI} disabled={!selectedFeature}>Edit Selected POI</button>
       <button onClick={handleDeletePOI} disabled={!selectedFeature}>Delete Selected POI</button>
       <div id="map" style={{ width: '100%', height: '100vh' }}></div>
+      <div id="popup" className="ol-popup">
+        <div id="popup-content" ref={contentRef}></div>
+      </div>
     </div>
   );
 };

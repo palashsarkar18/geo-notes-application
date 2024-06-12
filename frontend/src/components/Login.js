@@ -22,7 +22,7 @@ const Login = () => {
     e.preventDefault();
     setError(''); // Clear previous error messages
     try {
-      const response = await fetch('http://localhost:8000/api-token-auth/', {
+      const response = await fetch('http://localhost:8000/api/accounts/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,13 +31,13 @@ const Login = () => {
         body: JSON.stringify({ username, password }),
         credentials: 'include',  // Include credentials
       });
-
+  
       if (!response.ok) {
         const data = await response.json();
-        setError(data.non_field_errors ? data.non_field_errors[0] : 'Login failed');  // Set the error message from the server
+        setError(data.error);  // Set the error message from the server
         throw new Error('Login failed');
       }
-
+  
       const data = await response.json();
       localStorage.setItem('token', data.token);  // Store token
       navigate('/map');

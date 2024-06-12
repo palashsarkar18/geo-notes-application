@@ -27,9 +27,21 @@ class PointOfInterestDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     API view to retrieve, update, and delete points of interest.
     """
+    print("I AM HERE 2a")
     serializer_class = PointOfInterestSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        print("I AM HERE 2b")
+        print(self.request.data)
         return PointOfInterest.objects.filter(user=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        print("I AM HERE 2c")
+        print("Updating POI with data:", request.data)
+        return super().update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
 # TODO: Check if it is okay to define two classes inside views.py
