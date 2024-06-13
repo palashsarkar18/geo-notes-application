@@ -24,7 +24,6 @@ env = environ.Env(
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize environment variables
-env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
@@ -50,10 +49,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'corsheaders',
     'accounts',
     'pois',
+    'adrf'
 ]
 
 MIDDLEWARE = [
@@ -85,8 +85,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'geo_notes.wsgi.application'
-
+ASGI_APPLICATION = 'geo_notes.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -158,9 +157,7 @@ AUTH_USER_MODEL = 'accounts.User'  # TODO: Check what this does.
 # REST framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',

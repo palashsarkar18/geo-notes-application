@@ -13,6 +13,7 @@ Geo Notes is a full-stack web application that allows users to register, log in,
   - [Environment Variables](#environment-variables)
   - [Usage](#usage)
   - [API Endpoints](#api-endpoints)
+    - [Run the app](#run-the-app)
     - [Test](#test)
   - [Contributing](#contributing)
   - [License](#license)
@@ -147,6 +148,10 @@ Ensure you have the following installed on your system:
 - **Login**: `POST /api/accounts/login/`
 - **Logout**: `POST /api/accounts/logout/`
 - **POIs**: `GET /api/pois/`
+
+### Run the app
+uvicorn geo_notes.asgi:application --host 0.0.0.0 --port 8000 --reload
+
 
 ### Test
 ```
