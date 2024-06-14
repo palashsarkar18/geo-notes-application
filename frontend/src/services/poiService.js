@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/api/pois';
+const API_URL = process.env.REACT_APP_API_URL + "/pois";
 
 export const getPOIs = async (token, poi, csrfToken) => {
   const response = await fetch(`${API_URL}/pois/`, {

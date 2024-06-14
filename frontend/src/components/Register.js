@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCsrfToken } from '../utils/csrf';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -21,7 +23,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/api/accounts/register/', {
+      const response = await fetch(`${API_URL}/accounts/register/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
