@@ -1,12 +1,8 @@
+version: '3.9'
+
 services:
   db:
     image: postgres:15
-    # environment:
-    #   POSTGRES_DB: ${DATABASE_NAME}
-    #   POSTGRES_USER: ${DATABASE_USER}
-    #   POSTGRES_PASSWORD: superuser_password
-    # ports:
-    #   - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
@@ -20,7 +16,7 @@ services:
       dockerfile: Dockerfile
     command: >
       sh -c "python manage.py migrate &&
-             uvicorn geo_notes.asgi:application --host 0.0.0.0 --port 8000 --reload"
+             gunicorn geo_notes.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - ./backend:/app
     ports:
@@ -45,13 +41,15 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    command: ["pytest", "--cov=accounts", "--cov-report=term-missing"]
+    command: ["pytest", "--cov=accounts", "-cov=pois", "-cov=geo_notes", "--cov-report=term-missing"]
     volumes:
       - ./backend:/app
     depends_on:
       - db
     env_file:
       - ./backend/.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=geo_notes.settings
 
 volumes:
   postgres_data:
