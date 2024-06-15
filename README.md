@@ -166,12 +166,12 @@ Contributions are welcome! Please follow these steps to contribute:
 
 ## TODO
 
-* Add create and update time on UI?
-* Add tooltip on the UI with the option for edit/delete
-* GraphQL?
+* Add create and update time on UI? TRIED, didn't look good
+* Add tooltip on the UI with the option for edit/delete TRIED, didn't look good
+* GraphQL? NO TIME
 * Github codespaces
-* Add comments as docstring
-* Type hint?
+* Add comments as docstring DONE
+* Type hint? DONE
 * Define scope
-* Check if docker compose works without the build folder?
-* Check the latitude longiture limitation. The values should be in the range.
+* Check if docker compose works without the build folder? IT DOES NOT.
+* Check the latitude longiture limitation. The values should be in the range. DONE
