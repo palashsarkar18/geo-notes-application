@@ -24,7 +24,6 @@ env = environ.Env(
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize environment variables
-env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
@@ -37,12 +36,13 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS: list[str] = ["*"]  # Allow all hosts during development
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',  # CORS should be placed first
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,20 +51,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders',
     'accounts',
     'pois',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'geo_notes.urls'
@@ -87,9 +86,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'geo_notes.wsgi.application'
 
-
 # Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+# # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -157,13 +155,37 @@ REST_FRAMEWORK = {
     ),
 }
 
-# Configure CORS+
-CORS_ALLOW_CREDENTIALS = True  # Allow credentials
-CORS_ALLOWED_ORIGINS: list[str] = [
-    "http://localhost:3000",  # React app URL
+# Configure CORS
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "https://automatic-succotash-7gxwwvrpj4fx765-3000.app.github.dev",
+    "https://curly-spork-7gxwwvrp9pcxwjj-8000.app.github.dev"
+]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https:\/\/.*\.github\.dev$",
 ]
 
 # Configure CSRF trusted origins
-CSRF_TRUSTED_ORIGINS: list[str] = [
-    "http://localhost:3000",  # React app URL
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "https://automatic-succotash-7gxwwvrpj4fx765-3000.app.github.dev",
+    "https://curly-spork-7gxwwvrp9pcxwjj-8000.app.github.dev"
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CORS_EXPOSE_HEADERS = [
+    'Content-Type',
+    'X-CSRFToken',
 ]

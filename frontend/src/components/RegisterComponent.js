@@ -27,7 +27,8 @@ const Register = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken,
+          // 'X-CSRFToken': csrfToken,
+          'Accept': 'application/json'
         },
         body: JSON.stringify({ username, password, email }),
         credentials: 'include',  // Include credentials
