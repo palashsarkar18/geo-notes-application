@@ -15,6 +15,6 @@ class PointOfInterestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PointOfInterest
-        fields: list[str] = ['id', 'user', 'description', 'latitude',
+        fields: list[str] = ['id', 'username', 'description', 'latitude',
                              'longitude', 'created_at', 'updated_at']
-        read_only_fields: list[str] = ['user', 'created_at', 'updated_at']
+        read_only_fields: list[str] = ['username', 'created_at', 'updated_at']

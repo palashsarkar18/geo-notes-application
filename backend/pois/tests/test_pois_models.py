@@ -16,6 +16,7 @@ def test_poi_creation():
         description='A test point of interest'
     )
     assert poi.user == user
+    assert poi.username == 'testuser'
     assert poi.latitude == 45.0
     assert poi.longitude == 90.0
     assert poi.description == 'A test point of interest'

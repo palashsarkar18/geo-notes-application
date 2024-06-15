@@ -175,3 +175,6 @@ Contributions are welcome! Please follow these steps to contribute:
 * Define scope
 * Check if docker compose works without the build folder? DONE
 * Check the latitude longiture limitation. The values should be in the range. DONE
+* Update README
+* Use username instead of user DONE
+* Remove log lines and TODO in UI
