@@ -173,5 +173,5 @@ Contributions are welcome! Please follow these steps to contribute:
 * Add comments as docstring DONE
 * Type hint? DONE
 * Define scope
-* Check if docker compose works without the build folder? IT DOES NOT.
+* Check if docker compose works without the build folder? DONE
 * Check the latitude longiture limitation. The values should be in the range. DONE
