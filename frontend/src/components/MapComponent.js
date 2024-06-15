@@ -122,6 +122,7 @@ const MapComponent = () => {
       getPOIs(token).then(data => {
         if (Array.isArray(data)) {
           const features = data.map(poi => {
+            console.log(data);
             const feature = new Feature({
               geometry: new Point(fromLonLat([poi.longitude, poi.latitude])),
               name: poi.description

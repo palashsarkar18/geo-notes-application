@@ -30,3 +30,7 @@ class PointOfInterest(models.Model):
 
     def __str__(self) -> str:
         return f'{self.description} at ({self.latitude}, {self.longitude})'
+
+    @property
+    def username(self) -> str:
+        return self.user.username
