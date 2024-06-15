@@ -15,7 +15,7 @@ Geo Notes is a full-stack web application that allows users to register, log in,
   - [API Endpoints](#api-endpoints)
     - [Test](#test)
   - [Contributing](#contributing)
-  - [License](#license)
+  - [TODO](#todo)
 
 ## Project Structure
 
@@ -164,6 +164,14 @@ Contributions are welcome! Please follow these steps to contribute:
 5. Push to the branch (`git push origin feature-branch`).
 6. Create a new Pull Request.
 
-## License
+## TODO
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+* Add create and update time on UI?
+* Add tooltip on the UI with the option for edit/delete
+* GraphQL?
+* Github codespaces
+* Add comments as docstring
+* Type hint?
+* Define scope
+* Check if docker compose works without the build folder?
+* Check the latitude longiture limitation. The values should be in the range.

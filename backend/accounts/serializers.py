@@ -1,8 +1,12 @@
-from .models import User
+from typing import Dict, Any
 from rest_framework import serializers
+from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for User model.
+    """
     class Meta:
         model = User
         fields = ['id', 'username', 'password', 'email', 'date_joined']
@@ -10,8 +14,8 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
 
-    def create(self, validated_data: dict) -> User:
-        user = User.objects.create_user(
+    def create(self, validated_data: Dict[str, Any]) -> User:
+        user: User = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
             email=validated_data['email']

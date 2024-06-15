@@ -37,7 +37,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: list[str] = []
 
 
 # Application definition
@@ -159,11 +159,11 @@ REST_FRAMEWORK = {
 
 # Configure CORS+
 CORS_ALLOW_CREDENTIALS = True  # Allow credentials
-CORS_ALLOWED_ORIGINS = [
+CORS_ALLOWED_ORIGINS: list[str] = [
     "http://localhost:3000",  # React app URL
 ]
 
 # Configure CSRF trusted origins
-CSRF_TRUSTED_ORIGINS = [
+CSRF_TRUSTED_ORIGINS: list[str] = [
     "http://localhost:3000",  # React app URL
 ]
