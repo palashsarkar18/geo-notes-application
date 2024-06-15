@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
-import Login from './components/Login';
-import Register from './components/Register';
+import Login from './components/LoginComponent';
+import Register from './components/RegisterComponent';
 import MapComponent from './components/MapComponent';
-import LandingPage from './components/LandingPage';
+import LandingPage from './components/LandingPageComponent';
 
 const PrivateRoute = ({ component: Component }) => {
   return (

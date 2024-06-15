@@ -13,8 +13,12 @@ RUN npm install
 # Copy the rest of the application code into the container
 COPY . .
 
-# Build the React app
-RUN npm run build
+# TODO: Delete these comments
+# # Remove the build folder if it exists
+# RUN rm -rf build
+
+# # Build the React app
+# RUN npm run build
 
 # Serve the React app
 RUN npm install -g serve
