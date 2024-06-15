@@ -170,8 +170,10 @@ Contributions are welcome! Please follow these steps to contribute:
 * Add tooltip on the UI with the option for edit/delete TRIED, didn't look good
 * GraphQL? NO TIME
 * Github codespaces
+  * CORS issue when two subcontainers are running.
 * Add comments as docstring DONE
 * Type hint? DONE
 * Define scope
 * Check if docker compose works without the build folder? DONE
 * Check the latitude longiture limitation. The values should be in the range. DONE
+* babel-preset-react-app warning
