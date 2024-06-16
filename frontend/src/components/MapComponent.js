@@ -20,16 +20,13 @@ const MapComponent = () => {
   const infoRef = useRef(null); // Reference for the info element
   let currentFeature = null; // Define currentFeature
 
+  // Function to display feature information in the tooltip
   const displayFeatureInfo = (pixel, target) => {
     const map = mapRef.current;
-    console.log("displayFeatureInfo called");
     const feature = target.closest('.ol-control')
       ? undefined
-      : map.forEachFeatureAtPixel(pixel, function (feature) {
-          return feature;
-        });
+      : map.forEachFeatureAtPixel(pixel, (feature) => feature);
     if (feature) {
-      console.log('pixel', pixel)
       const offsetX = 10; // Adjust this value to move the tooltip closer horizontally
       const offsetY = -100; // Adjust this value to move the tooltip closer vertically
       infoRef.current.style.left = (pixel[0] - offsetX) + 'px';
@@ -46,26 +43,22 @@ const MapComponent = () => {
           <div>Created at: ${new Date(createdAt).toLocaleString()}</div>
           <div>Updated at: ${new Date(updatedAt).toLocaleString()}</div>
         `;
-        console.log("Feature info:", feature.get('name'));
       }
       if (feature !== selectedFeature) {
         setSelectedFeature(feature); // Set selected feature when hovering over a feature
       }
     } else {
       infoRef.current.style.visibility = 'hidden';
-      console.log("No feature found at pixel:", pixel);
-      // Don't reset selectedFeature here
     }
     currentFeature = feature;
   };
 
+  // Function to handle map clicks
   const handleMapClick = async (event) => {
-    console.log("handleMapClick");
     const map = mapRef.current;
     const feature = map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
     if (feature) {
-      console.log("Feature clicked, skipping handleMapClick");
-      return;
+      return; // Skip handleMapClick if a feature is clicked
     }
     
     const coordinate = toLonLat(event.coordinate);
@@ -77,14 +70,11 @@ const MapComponent = () => {
         longitude: parseFloat(coordinate[0].toFixed(6)),
         description
       };
-      console.log("Payload to be sent to the server:", poi);  // Log the payload
 
       // Fetch CSRF token
       const csrfToken = await getCsrfToken();
-      console.log("CSRF Token:", csrfToken);
 
       createPOI(token, poi).then(newPOI => {
-        console.log("newPOI:", newPOI);
         const feature = new Feature({
           geometry: new Point(fromLonLat([newPOI.longitude, newPOI.latitude])),
           description: newPOI.description,
@@ -112,6 +102,7 @@ const MapComponent = () => {
     infoRef.current = document.getElementById('info'); // Set the infoRef to the actual DOM element
 
     if (!mapRef.current) {
+      // Initialize the map
       mapRef.current = new Map({
         target: 'map',
         layers: [
@@ -131,7 +122,6 @@ const MapComponent = () => {
       // Fetch POIs from the backend
       getPOIs(token).then(data => {
         if (Array.isArray(data)) {
-          console.log("POI: ", data);
           const features = data.map(poi => {
             const feature = new Feature({
               geometry: new Point(fromLonLat([poi.longitude, poi.latitude])),
@@ -159,9 +149,9 @@ const MapComponent = () => {
         console.error('Error fetching POIs:', error);
       });
 
-      console.log("Adding event listeners - singleclick and pointermove");
+      // Add event listeners for map interactions
       mapRef.current.on('singleclick', handleMapClick);
-      mapRef.current.on('pointermove', function (evt) {
+      mapRef.current.on('pointermove', (evt) => {
         if (evt.dragging) {
           infoRef.current.style.visibility = 'hidden';
           currentFeature = null;
@@ -171,29 +161,27 @@ const MapComponent = () => {
         displayFeatureInfo(pixel, evt.originalEvent.target);
       });
 
-      mapRef.current.on('click', function (evt) {
+      mapRef.current.on('click', (evt) => {
         displayFeatureInfo(evt.pixel, evt.originalEvent.target);
       });
 
-      mapRef.current.getTargetElement().addEventListener('pointerleave', function () {
+      mapRef.current.getTargetElement().addEventListener('pointerleave', () => {
         currentFeature = null;
         infoRef.current.style.visibility = 'hidden';
       });
-
-      console.log("map initialized and event listeners added");
     }
 
     // Cleanup function to remove event listeners only when component unmounts
     return () => {
       if (mapRef.current) {
-        // console.log("Removing event listeners - singleclick and pointermove");
+        // Uncomment these lines if you need to remove event listeners during cleanup
         // mapRef.current.un('singleclick', handleMapClick);
         // mapRef.current.un('pointermove', handlePointerMove);
-        // console.log("event listeners removed");
       }
     };
   }, [token]);
 
+  // Function to handle editing a POI
   const handleEditPOI = () => {
     if (selectedFeature) {
       const newDescription = prompt('Edit description for the POI:', selectedFeature.get('description'));
@@ -208,6 +196,7 @@ const MapComponent = () => {
     }
   };
 
+  // Function to handle deleting a POI
   const handleDeletePOI = () => {
     if (selectedFeature) {
       if (window.confirm('Are you sure you want to delete this POI?')) {
@@ -221,6 +210,7 @@ const MapComponent = () => {
     }
   };
 
+  // Function to handle user logout
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/';
@@ -232,7 +222,7 @@ const MapComponent = () => {
       <button onClick={handleEditPOI} disabled={!selectedFeature}>Edit Selected POI</button>
       <button onClick={handleDeletePOI} disabled={!selectedFeature}>Delete Selected POI</button>
       <div id="map" style={{ width: '100%', height: '100vh' }}></div>
-      <div id="info" className="ol-tooltip"></div> {/* Add this for the tooltip */}
+      <div id="info" className="ol-tooltip"></div> {/* Tooltip for feature info */}
     </div>
   );
 };

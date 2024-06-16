@@ -15,7 +15,6 @@ Geo Notes is a web application that allows users to create, view, update, and de
   - [Usage](#usage)
   - [API Endpoints](#api-endpoints)
   - [Test](#test)
-  - [TODO](#todo)
 
 ## Scope
 1. This repository focuses on the Django backend more than the React frontend.
@@ -172,21 +171,3 @@ The coverage report will be displayed in the terminal after the tests are execut
 2024-06-16 00:05:35 ---------------------------------------------------------------------
 2024-06-16 00:05:35 TOTAL                                     106      7    93%
 ```
-
-
-
-## TODO
-
-* Add create and update time on UI? TRIED, didn't look good
-* Add tooltip on the UI with the option for edit/delete TRIED, didn't look good
-* GraphQL? NO TIME
-* Github codespaces
-* Add comments as docstring DONE
-* Type hint? DONE
-* Define scope DONE
-* Check if docker compose works without the build folder? DONE
-* Check the latitude longiture limitation. The values should be in the range. DONE
-* Update README. DONE
-* Use username instead of user DONE
-* Remove log lines and TODO in UI.
-* babel preset warning.

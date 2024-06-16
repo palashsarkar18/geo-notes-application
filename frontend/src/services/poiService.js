@@ -5,7 +5,7 @@ export const getPOIs = async (token, poi, csrfToken) => {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Token ${token}`,
-    //   'X-CSRFToken': csrfToken  // Include CSRF token if necessary
+    //   'X-CSRFToken': csrfToken
     }
   });
   if (!response.ok) {
@@ -21,7 +21,7 @@ export const createPOI = async (token, poi, csrfToken) => {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Token ${token}`,
-      'X-CSRFToken': csrfToken  // Include CSRF token if necessary (TODO)
+      'X-CSRFToken': csrfToken
 
     },
     body: JSON.stringify(poi) // Ensure body is JSON string
