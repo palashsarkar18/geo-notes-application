@@ -6,6 +6,7 @@ Geo Notes is a web application that allows users to create, view, update, and de
 
 - [Geo Notes](#geo-notes)
   - [Table of Contents](#table-of-contents)
+  - [Scope](#scope)
   - [Project Structure](#project-structure)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -15,6 +16,11 @@ Geo Notes is a web application that allows users to create, view, update, and de
   - [API Endpoints](#api-endpoints)
   - [Test](#test)
   - [TODO](#todo)
+
+## Scope
+1. This repository focuses on the Django backend more than the React frontend.
+2. Basic unit test cases with majority coverage is defined. Integration tests are not included.
+3. Github Codespaces is ran for this repository but with the default devcontainer image.
 
 ## Project Structure
 
@@ -177,9 +183,10 @@ The coverage report will be displayed in the terminal after the tests are execut
 * Github codespaces
 * Add comments as docstring DONE
 * Type hint? DONE
-* Define scope
+* Define scope DONE
 * Check if docker compose works without the build folder? DONE
 * Check the latitude longiture limitation. The values should be in the range. DONE
 * Update README. DONE
 * Use username instead of user DONE
 * Remove log lines and TODO in UI.
+* babel preset warning.
