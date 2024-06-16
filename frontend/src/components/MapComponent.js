@@ -9,7 +9,6 @@ import { Point } from 'ol/geom';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Style, Icon } from 'ol/style';
-import Overlay from 'ol/Overlay';
 import { getPOIs, createPOI, updatePOI, deletePOI } from '../services/poiService';
 import { getCsrfToken } from '../utils/csrf';
 
@@ -18,8 +17,6 @@ const MapComponent = () => {
   const [vectorSource] = useState(new VectorSource());
   const [selectedFeature, setSelectedFeature] = useState(null);
   const token = localStorage.getItem('token');
-  const popupRef = useRef(null);
-  const contentRef = useRef(null);
   const infoRef = useRef(null); // Reference for the info element
   let currentFeature = null; // Define currentFeature
 
@@ -51,9 +48,13 @@ const MapComponent = () => {
         `;
         console.log("Feature info:", feature.get('name'));
       }
+      if (feature !== selectedFeature) {
+        setSelectedFeature(feature); // Set selected feature when hovering over a feature
+      }
     } else {
       infoRef.current.style.visibility = 'hidden';
       console.log("No feature found at pixel:", pixel);
+      // Don't reset selectedFeature here
     }
     currentFeature = feature;
   };
@@ -107,47 +108,7 @@ const MapComponent = () => {
     }
   };
 
-  const handlePointerMove = (event) => {
-    console.log("handlePointerMove");
-    const map = mapRef.current;
-    const selected = map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
-
-    if (selected) {
-      if (selectedFeature !== selected) {
-        setSelectedFeature(selected);
-        map.getTargetElement().style.cursor = 'pointer';
-
-        const coordinates = selected.getGeometry().getCoordinates();
-        const description = selected.get('name');
-        if (contentRef.current) {
-          contentRef.current.innerHTML = description;
-        }
-        if (popupRef.current) {
-          popupRef.current.setPosition(coordinates);
-        }
-      }
-    } else {
-      if (selectedFeature) {
-        setSelectedFeature(null);
-        map.getTargetElement().style.cursor = '';
-        if (popupRef.current) {
-          popupRef.current.setPosition(undefined); // Hide the popup
-        }
-      }
-    }
-  };
-
   useEffect(() => {
-    const popupElement = document.getElementById('popup');
-    const contentElement = document.getElementById('popup-content');
-    contentRef.current = contentElement;  // Set the contentRef to the actual DOM element
-    popupRef.current = new Overlay({
-      element: popupElement,
-      positioning: 'bottom-center',
-      stopEvent: false,
-      offset: [0, -10]
-    });
-
     infoRef.current = document.getElementById('info'); // Set the infoRef to the actual DOM element
 
     if (!mapRef.current) {
@@ -164,8 +125,7 @@ const MapComponent = () => {
         view: new View({
           center: fromLonLat([24.9384, 60.1699]),
           zoom: 12
-        }),
-        overlays: [popupRef.current]
+        })
       });
 
       // Fetch POIs from the backend
@@ -201,8 +161,6 @@ const MapComponent = () => {
 
       console.log("Adding event listeners - singleclick and pointermove");
       mapRef.current.on('singleclick', handleMapClick);
-      mapRef.current.on('pointermove', handlePointerMove);
-
       mapRef.current.on('pointermove', function (evt) {
         if (evt.dragging) {
           infoRef.current.style.visibility = 'hidden';
@@ -238,11 +196,11 @@ const MapComponent = () => {
 
   const handleEditPOI = () => {
     if (selectedFeature) {
-      const newDescription = prompt('Edit description for the POI:', selectedFeature.get('name'));
+      const newDescription = prompt('Edit description for the POI:', selectedFeature.get('description'));
       if (newDescription) {
         const updatedPOI = { description: newDescription };
         updatePOI(token, selectedFeature.getId(), updatedPOI).then(() => {
-          selectedFeature.set('name', newDescription);
+          selectedFeature.set('description', newDescription);
         }).catch(error => {
           console.error('Error updating POI:', error);
         });
@@ -274,9 +232,6 @@ const MapComponent = () => {
       <button onClick={handleEditPOI} disabled={!selectedFeature}>Edit Selected POI</button>
       <button onClick={handleDeletePOI} disabled={!selectedFeature}>Delete Selected POI</button>
       <div id="map" style={{ width: '100%', height: '100vh' }}></div>
-      <div id="popup" className="ol-popup">
-        <div id="popup-content" ref={contentRef}></div>
-      </div>
       <div id="info" className="ol-tooltip"></div> {/* Add this for the tooltip */}
     </div>
   );
