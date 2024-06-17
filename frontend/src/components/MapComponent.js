@@ -16,6 +16,7 @@ const MapComponent = () => {
   const mapRef = useRef(null);
   const [vectorSource] = useState(new VectorSource());
   const [selectedFeature, setSelectedFeature] = useState(null);
+  const [csrfToken, setCsrfToken] = useState(''); // State to store CSRF token
   const token = localStorage.getItem('token');
   const infoRef = useRef(null); // Reference for the info element
   let currentFeature = null; // Define currentFeature
@@ -71,10 +72,7 @@ const MapComponent = () => {
         description
       };
 
-      // Fetch CSRF token
-      const csrfToken = await getCsrfToken();
-
-      createPOI(token, poi).then(newPOI => {
+      createPOI(token, poi, csrfToken).then(newPOI => {
         const feature = new Feature({
           geometry: new Point(fromLonLat([newPOI.longitude, newPOI.latitude])),
           description: newPOI.description,
@@ -99,6 +97,12 @@ const MapComponent = () => {
   };
 
   useEffect(() => {
+    const fetchCsrfToken = async () => {
+      const token = await getCsrfToken();
+      setCsrfToken(token);
+    };
+    fetchCsrfToken();
+
     infoRef.current = document.getElementById('info'); // Set the infoRef to the actual DOM element
 
     if (!mapRef.current) {
@@ -182,12 +186,12 @@ const MapComponent = () => {
   }, [token]);
 
   // Function to handle editing a POI
-  const handleEditPOI = () => {
+  const handleEditPOI = async () => {
     if (selectedFeature) {
       const newDescription = prompt('Edit description for the POI:', selectedFeature.get('description'));
       if (newDescription) {
         const updatedPOI = { description: newDescription };
-        updatePOI(token, selectedFeature.getId(), updatedPOI).then(() => {
+        updatePOI(token, selectedFeature.getId(), updatedPOI, csrfToken).then(() => {
           selectedFeature.set('description', newDescription);
         }).catch(error => {
           console.error('Error updating POI:', error);
@@ -197,10 +201,10 @@ const MapComponent = () => {
   };
 
   // Function to handle deleting a POI
-  const handleDeletePOI = () => {
+  const handleDeletePOI = async () => {
     if (selectedFeature) {
       if (window.confirm('Are you sure you want to delete this POI?')) {
-        deletePOI(token, selectedFeature.getId()).then(() => {
+        deletePOI(token, selectedFeature.getId(), csrfToken).then(() => {
           vectorSource.removeFeature(selectedFeature);
           setSelectedFeature(null);
         }).catch(error => {
@@ -213,6 +217,7 @@ const MapComponent = () => {
   // Function to handle user logout
   const handleLogout = () => {
     localStorage.removeItem('token');
+    setCsrfToken(''); // Clear CSRF token on logout
     window.location.href = '/';
   };
 

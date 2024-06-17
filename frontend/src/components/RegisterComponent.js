@@ -41,7 +41,7 @@ const Register = () => {
 
       const data = await response.json();
       localStorage.setItem('token', data.token);  // Store token
-      navigate('/login');
+      navigate('/map');
     } catch (error) {
       console.error('Error during registration:', error);
     }

@@ -1,11 +1,10 @@
 const API_URL = process.env.REACT_APP_API_URL + "/pois";
 
-export const getPOIs = async (token, poi, csrfToken) => {
+export const getPOIs = async (token) => {
   const response = await fetch(`${API_URL}/pois/`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Token ${token}`,
-    //   'X-CSRFToken': csrfToken
     }
   });
   if (!response.ok) {
@@ -41,12 +40,13 @@ export const createPOI = async (token, poi, csrfToken) => {
   return response.json();
 };
 
-export const updatePOI = async (token, id, poi) => {
+export const updatePOI = async (token, id, poi, csrfToken) => {
   const response = await fetch(`${API_URL}/pois/${id}/`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
+      'Authorization': `Token ${token}`,
+      'X-CSRFToken': csrfToken
     },
     body: JSON.stringify(poi)
   });
@@ -56,11 +56,12 @@ export const updatePOI = async (token, id, poi) => {
   return response.json();
 };
 
-export const deletePOI = async (token, id) => {
+export const deletePOI = async (token, id, csrfToken) => {
   const response = await fetch(`${API_URL}/pois/${id}/`, {
     method: 'DELETE',
     headers: {
-      'Authorization': `Token ${token}`
+      'Authorization': `Token ${token}`,
+      'X-CSRFToken': csrfToken
     }
   });
   if (!response.ok) {
