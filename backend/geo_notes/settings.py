@@ -37,12 +37,16 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS: list[str] = [
+    "localhost",
+    "https://zany-sniffle-5w955g4v5wfvjgr-3000.app.github.dev"
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,12 +55,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders',
     'accounts',
     'pois',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,7 +68,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'geo_notes.urls'
@@ -161,9 +164,34 @@ REST_FRAMEWORK = {
 CORS_ALLOW_CREDENTIALS = True  # Allow credentials
 CORS_ALLOWED_ORIGINS: list[str] = [
     "http://localhost:3000",  # React app URL
+    # "https://ominous-pancake-ggp6645xxqfw7j-8000.app.github.dev",
+    "https://zany-sniffle-5w955g4v5wfvjgr-3000.app.github.dev"
 ]
 
+# CORS_ALLOWED_ORIGIN_REGEXES = [
+#     r"^https:\/\/.*\.github\.dev$",
+# ]
+
 # Configure CSRF trusted origins
-CSRF_TRUSTED_ORIGINS: list[str] = [
-    "http://localhost:3000",  # React app URL
-]
+# CSRF_TRUSTED_ORIGINS: list[str] = [
+#     "http://localhost:3000",  # React app URL
+#     # "https://ominous-pancake-ggp6645xxqfw7j-8000.app.github.dev",
+#     "https://zany-sniffle-5w955g4v5wfvjgr-3000.app.github.dev"
+# ]
+
+# CORS_ALLOW_HEADERS = [
+#     'accept',
+#     'accept-encoding',
+#     'authorization',
+#     'content-type',
+#     'dnt',
+#     'origin',
+#     'user-agent',
+#     'x-csrftoken',
+#     'x-requested-with',
+# ]
+
+# CORS_EXPOSE_HEADERS = [
+#     'Content-Type',
+#     'X-CSRFToken',
+# ]
