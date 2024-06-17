@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from typing import Any
 from .models import PointOfInterest
 from .serializers import PointOfInterestSerializer
+from .permissions import IsOwnerOrReadOnly
 
 
 class PointOfInterestListCreateView(generics.ListCreateAPIView):
@@ -14,7 +15,7 @@ class PointOfInterestListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return PointOfInterest.objects.filter(user=self.request.user)
+        return PointOfInterest.objects.all()
 
     def perform_create(self, serializer: PointOfInterestSerializer) -> None:
         serializer.save(user=self.request.user)
@@ -25,10 +26,10 @@ class PointOfInterestDetailView(generics.RetrieveUpdateDestroyAPIView):
     API view to retrieve, update, and delete points of interest.
     """
     serializer_class = PointOfInterestSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def get_queryset(self):
-        return PointOfInterest.objects.filter(user=self.request.user)
+        return PointOfInterest.objects.all()
 
     def update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         return super().update(request, *args, **kwargs)
